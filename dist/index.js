@@ -208,6 +208,14 @@ function serveStatic2(app2) {
     );
   }
   app2.use(express2.static(distPath));
+  app2.get("/", (_req, res) => {
+    const fallbackPath = path4.resolve(process.cwd(), "client", "public", "fallback.html");
+    if (fs2.existsSync(fallbackPath)) {
+      res.sendFile(fallbackPath);
+    } else {
+      res.sendFile(path4.resolve(distPath, "index.html"));
+    }
+  });
   app2.use("*", (_req, res) => {
     res.sendFile(path4.resolve(distPath, "index.html"));
   });

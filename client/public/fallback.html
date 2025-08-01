@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MxSmiles - Affordable Dental Care in Mexico</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .hero { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .hero h1 { 
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .hero p { 
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+        .btn {
+            background: #64A8F0;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+        .btn:hover { background: #5496dd; }
+        .features {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .feature {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .feature h3 { color: #64A8F0; margin-bottom: 1rem; }
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+        }
+        .loading { 
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: #64A8F0;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">React App Loading...</div>
+    
+    <section class="hero">
+        <h1>Save 40-70% on Dental Care</h1>
+        <p>Get world-class dental treatment in Mexico at a fraction of US costs. Trusted by thousands of patients.</p>
+        <a href="#contact" class="btn">Get Free Consultation</a>
+    </section>
+
+    <section class="features">
+        <h2>Why Choose MxSmiles?</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <h3>💰 Massive Savings</h3>
+                <p>Save 40-70% compared to US dental costs while receiving the same quality of care.</p>
+            </div>
+            <div class="feature">
+                <h3>🏥 Quality Care</h3>
+                <p>Work with certified dentists in modern facilities using the latest technology.</p>
+            </div>
+            <div class="feature">
+                <h3>🛡️ Safe & Trusted</h3>
+                <p>All our partner clinics are verified and have excellent patient safety records.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" style="background: #f8f9fa; padding: 80px 20px; text-align: center;">
+        <h2>Ready to Save on Dental Care?</h2>
+        <p style="margin-bottom: 2rem; font-size: 1.1rem;">Contact us for a free consultation and personalized treatment plan.</p>
+        <div style="max-width: 400px; margin: 0 auto;">
+            <form action="/api/contact" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+                <input type="text" name="name" placeholder="Your Name" required style="padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                <input type="email" name="email" placeholder="Your Email" required style="padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                <input type="tel" name="phone" placeholder="Your Phone" style="padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem;">
+                <input type="hidden" name="subject" value="Website Contact Form">
+                <textarea name="message" placeholder="Tell us about your dental needs..." rows="4" style="padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 1rem; resize: vertical;"></textarea>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 MxSmiles. Affordable dental care you can trust.</p>
+    </footer>
+
+    <script>
+        // Remove loading indicator after 3 seconds if React app hasn't loaded
+        setTimeout(() => {
+            const loading = document.querySelector('.loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+        }, 3000);
+        
+        // Try to detect if React has loaded
+        function checkReactApp() {
+            const root = document.getElementById('root');
+            if (root && root.innerHTML.trim() !== '') {
+                document.body.style.display = 'none';
+            }
+        }
+        
+        setInterval(checkReactApp, 100);
+    </script>
+</body>
+</html>
