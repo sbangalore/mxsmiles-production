@@ -121,9 +121,26 @@ jobs:
         echo "✅ Deployment successful!"
         EOF
 
-        # Upload and execute deployment script
+        # Upload deployment script
         aws s3 cp deploy.sh s3://mxsmiles-patient-photos-rbvlffvt/deployments/
         
+        # Wait for SSM Agent to be ready (new instances need time to register)
+        echo "⏳ Waiting for SSM Agent to be ready..."
+        for i in {1..20}; do
+          if aws ssm describe-instance-information --filters "Key=InstanceIds,Values=i-09e89b4faa12945c3" --region us-east-1 --query 'InstanceInformationList[0].PingStatus' --output text 2>/dev/null | grep -q "Online"; then
+            echo "✅ SSM Agent is online!"
+            break
+          else
+            echo "⏳ Attempt $i: SSM Agent not ready yet, waiting 30 seconds..."
+            if [ $i -eq 20 ]; then
+              echo "❌ SSM Agent failed to come online after 10 minutes"
+              exit 1
+            fi
+            sleep 30
+          fi
+        done
+        
+        # Execute deployment
         aws ssm send-command \
           --instance-ids i-09e89b4faa12945c3 \
           --document-name "AWS-RunShellScript" \
