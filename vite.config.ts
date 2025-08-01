@@ -4,10 +4,15 @@ import path from "path";
 import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
+  define: {
+    // Make React available globally to fix use-sync-external-store-shim
+    global: 'globalThis',
+  },
   plugins: [
     react({
       // Ensure React is properly imported for production builds
       jsxImportSource: "react",
+      jsxRuntime: "automatic",
       babel: {
         // Skip Babel transforms for modern browsers
         parserOpts: {
