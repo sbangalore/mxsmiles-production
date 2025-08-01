@@ -1,3 +1,4 @@
+import React from "react";
 import { createRoot } from "react-dom/client";
 
 // Extremely simple React app for testing

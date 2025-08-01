@@ -6,6 +6,8 @@ import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 export default defineConfig({
   plugins: [
     react({
+      // Ensure React is properly imported for production builds
+      jsxImportSource: "react",
       babel: {
         // Skip Babel transforms for modern browsers
         parserOpts: {

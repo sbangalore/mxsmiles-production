@@ -20,6 +20,8 @@ var init_vite_config = __esm({
     vite_config_default = defineConfig({
       plugins: [
         react({
+          // Ensure React is properly imported for production builds
+          jsxImportSource: "react",
           babel: {
             // Skip Babel transforms for modern browsers
             parserOpts: {
