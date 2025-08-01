@@ -125,7 +125,7 @@ jobs:
         aws s3 cp deploy.sh s3://mxsmiles-patient-photos-rbvlffvt/deployments/
         
         aws ssm send-command \
-          --instance-ids i-0e201d9e18fd2bec8 \
+          --instance-ids i-09e89b4faa12945c3 \
           --document-name "AWS-RunShellScript" \
           --parameters "commands=[
             'aws s3 cp s3://mxsmiles-patient-photos-rbvlffvt/deployments/deploy.sh /tmp/deploy.sh',
