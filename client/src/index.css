@@ -1,0 +1,396 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* Account for fixed header */
+}
+
+/* Optimize image loading */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Reduce layout shifts */
+.hero-image {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+/* Apple.com-style smooth scrolling optimization */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
+  }
+  
+  body {
+    scroll-behavior: smooth;
+  }
+  
+  /* Enhance scroll momentum on webkit devices */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Apple-style smooth transitions for interactive elements */
+  button, .cursor-pointer, a[href] {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Performance optimizations */
+@layer base {
+  /* Optimize scroll behavior for Apple-style smoothness */
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* Optimize font rendering */
+  body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Prevent layout shift for images */
+  img[width][height] {
+    height: auto;
+  }
+  
+  /* GPU acceleration for smoother animations */
+  .animate-on-scroll {
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  /* Critical path optimization */
+  .critical-resource {
+    font-display: swap;
+  }
+  
+  /* Reduce layout shift */
+  img, picture {
+    height: auto;
+    max-width: 100%;
+  }
+  
+  /* Optimize reflows */
+  .no-reflow {
+    contain: layout;
+  }
+}
+
+/* Design Theme CSS Variables and Classes */
+:root {
+  --header-bg: #ffffff;
+  --header-text: #1e293b;
+  --body-bg: #ffffff;
+  --body-text: #1e293b;
+  --primary-color: #4A8AD8; /* Darker blue for better contrast */
+  --primary-color-hover: #5496E0;
+  --primary-color-light: rgba(100, 168, 240, 0.1);
+  --primary-color-lighter: rgba(100, 168, 240, 0.05);
+  --primary-color-border: rgba(100, 168, 240, 0.3);
+  --secondary-button: #f1f5f9;
+  --card-bg: #ffffff;
+  --card-text: #1e293b;
+}
+
+/* Default theme typography */
+.default-theme {
+  font-family: "Plus Jakarta Sans", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.default-theme h1, .default-theme h2, .default-theme h3, .default-theme h4, .default-theme h5, .default-theme h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+/* Senior care typography adjustments */
+.senior-care-theme h1, .senior-care-theme h2, .senior-care-theme h3, .senior-care-theme h4, .senior-care-theme h5, .senior-care-theme h6 {
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.3;
+}
+
+.senior-care-theme p, .senior-care-theme span, .senior-care-theme div {
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* Apple Theme - Premium Color System */
+.apple-theme {
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --header-text: #1d1d1f;
+  --body-bg: #fbfbfd;
+  --body-text: #1d1d1f;
+  --primary-button: #007aff;
+  --secondary-button: #f5f5f7;
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --card-text: #1d1d1f;
+  --accent: #007aff;
+  --section-bg-primary: #f5f5f7;
+  --section-bg-secondary: #ffffff;
+  --section-bg-accent: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  
+  /* Apple system font stack */
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.47059;
+  letter-spacing: -0.022em;
+}
+
+
+
+.apple-theme::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  z-index: -1;
+  opacity: 0.3;
+}
+
+/* Senior Care Theme */
+.senior-care-theme {
+  --header-bg: #f8f9fa;
+  --header-text: #2c3e50;
+  --body-bg: #fafbfc;
+  --body-text: #2c3e50;
+  --primary-button: #3498db;
+  --secondary-button: #ecf0f1;
+  --card-bg: #ffffff;
+  --card-text: #2c3e50;
+  --accent: #3498db;
+  background-color: #fafbfc;
+  
+  /* Senior-friendly readable font stack */
+  font-family: "Inter", -apple-system, system-ui, "Segoe UI", Roboto, "Open Sans", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+/* Glass effect utilities */
+.glass-bg {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+}
+
+/* Apple theme - no animations for clean, instant interface */
+.apple-theme * {
+  transition: none !important;
+  animation: none !important;
+}
+
+.apple-theme *:hover,
+.apple-theme *:focus,
+.apple-theme *:active {
+  transition: none !important;
+  animation: none !important;
+}
+
+.apple-theme h1, .apple-theme h2, .apple-theme h3, .apple-theme h4, .apple-theme h5, .apple-theme h6 {
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  line-height: 1.1;
+}
+
+.apple-theme p, .apple-theme span, .apple-theme div {
+  font-weight: 400;
+  letter-spacing: -0.016em;
+  line-height: 1.47059;
+}
+
+.apple-theme button {
+  font-weight: 400;
+  letter-spacing: -0.016em;
+}
+
+/* Senior care rounded corners */
+.senior-care-theme .rounded-card {
+  border-radius: 1.5rem;
+}
+
+.senior-care-theme button {
+  border-radius: 9999px;
+}
+
+/* Typography adjustments */
+.apple-theme {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+.senior-care-theme {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+}
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 95%, 45%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* MaceCare Custom Colors - Improved contrast */
+  --medical-blue: hsl(207, 100%, 40%);
+  --health-green: hsl(154, 80%, 28%); /* Darker green for better contrast */
+  --mexican-orange: hsl(38, 92%, 42%); /* Darker orange for better contrast */
+  --trust-gray: hsl(215, 13%, 44%);
+  --light-bg: hsl(210, 40%, 98%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 95%, 45%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .medical-blue {
+    color: var(--medical-blue);
+  }
+  
+  .bg-medical-blue {
+    background-color: var(--medical-blue);
+  }
+  
+  .health-green {
+    color: var(--health-green);
+  }
+  
+  .bg-health-green {
+    background-color: var(--health-green);
+  }
+  
+  .mexican-orange {
+    color: var(--mexican-orange);
+  }
+  
+  .bg-mexican-orange {
+    background-color: var(--mexican-orange);
+  }
+  
+  .trust-gray {
+    color: var(--trust-gray);
+  }
+  
+  .bg-trust-gray {
+    background-color: var(--trust-gray);
+  }
+  
+  .bg-light-bg {
+    background-color: var(--light-bg);
+  }
+}
+
+/* Apple.com mobile menu styles - smooth transitions only */
+.apple-mobile-menu {
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.apple-mobile-menu-item {
+  transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+}

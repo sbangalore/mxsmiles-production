@@ -1,0 +1,37 @@
+# Robots.txt for MxSmiles Medical Tourism
+# Optimized for SEO and search engine crawling
+
+# Allow all search engines to crawl public content
+User-agent: *
+Allow: /
+
+# Block CRM and admin areas
+Disallow: /crm
+Disallow: /crm-login
+
+# Block test and development pages
+Disallow: /email-test
+Disallow: /language-test
+Disallow: /booking-broken
+
+# Block common sensitive areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /server/
+Disallow: /_next/
+Disallow: /scripts/
+
+# Allow important medical tourism pages
+Allow: /
+Allow: /booking
+Allow: /consultation
+Allow: /services
+Allow: /locations
+Allow: /pricing
+Allow: /reviews
+
+# Crawl delay to protect server resources
+Crawl-delay: 1
+
+# Sitemap location (to be added)
+Sitemap: https://mxsmiles.com/sitemap.xml
