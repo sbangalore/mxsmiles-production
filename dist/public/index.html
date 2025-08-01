@@ -1,39 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Performance optimizations -->
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://images.unsplash.com" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    
-    <!-- Critical CSS inline -->
-    <style>body{font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;margin:0;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}#root{min-height:100vh}.hero-container,.hero-section{background:#fbfbfd}.hero-section{overflow:hidden;padding:8rem 0}img[width][height]{height:auto}.btn-primary{background:#64a8f0;border:none;border-radius:.5rem;color:#fff;font-weight:500;padding:1rem 2rem;transition:background-color .2s ease}.btn-primary:hover{background:#5496dd}</style>
-    
-    <!-- Preload critical resources -->
-    <noscript></noscript>
-    <link rel="preload" href="data:application/octet-stream;base64,aW1wb3J0IFJlYWN0IGZyb20gInJlYWN0IjsKaW1wb3J0IHsgY3JlYXRlUm9vdCB9IGZyb20gInJlYWN0LWRvbS9jbGllbnQiOwppbXBvcnQgQXBwIGZyb20gIi4vQXBwLXNpbXBsZSI7CmltcG9ydCAiLi9pbmRleC5jc3MiOwoKLy8gQWRkIGxvYWRpbmcgaW5kaWNhdG9yIGltbWVkaWF0ZWx5CmNvbnN0IHJvb3RFbGVtZW50ID0gZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoInJvb3QiKTsKaWYgKHJvb3RFbGVtZW50KSB7CiAgcm9vdEVsZW1lbnQuaW5uZXJIVE1MID0gJzxkaXYgc3R5bGU9ImRpc3BsYXk6IGZsZXg7IGFsaWduLWl0ZW1zOiBjZW50ZXI7IGp1c3RpZnktY29udGVudDogY2VudGVyOyBtaW4taGVpZ2h0OiAxMDB2aDsgZm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0sIEJsaW5rTWFjU3lzdGVtRm9udCwgc2Fucy1zZXJpZjsgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KDEzNWRlZywgIzY2N2VlYSAwJSwgIzc2NGJhMiAxMDAlKTsgY29sb3I6IHdoaXRlOyI+PGRpdiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyI+PGRpdiBzdHlsZT0iZm9udC1zaXplOiAycmVtOyBtYXJnaW4tYm90dG9tOiAxNnB4OyI+8J+mtyBMb2FkaW5nIE14U21pbGVzLi4uPC9kaXY+PGRpdiBzdHlsZT0id2lkdGg6IDMycHg7IGhlaWdodDogMzJweDsgYm9yZGVyOiAzcHggc29saWQgcmdiYSgyNTUsMjU1LDI1NSwwLjMpOyBib3JkZXItdG9wOiAzcHggc29saWQgIzY0QThGMDsgYm9yZGVyLXJhZGl1czogNTAlOyBhbmltYXRpb246IHNwaW4gMXMgbGluZWFyIGluZmluaXRlOyBtYXJnaW46IDAgYXV0bzsiPjwvZGl2PjwvZGl2PjwvZGl2PjxzdHlsZT5Aa2V5ZnJhbWVzIHNwaW4geyAwJSB7IHRyYW5zZm9ybTogcm90YXRlKDBkZWcpOyB9IDEwMCUgeyB0cmFuc2Zvcm06IHJvdGF0ZSgzNjBkZWcpOyB9IH08L3N0eWxlPic7CiAgCiAgdHJ5IHsKICAgIGNvbnN0IHJvb3QgPSBjcmVhdGVSb290KHJvb3RFbGVtZW50KTsKICAgIHJvb3QucmVuZGVyKDxBcHAgLz4pOwogIH0gY2F0Y2ggKGVycm9yKSB7CiAgICBjb25zb2xlLmVycm9yKCdGYWlsZWQgdG8gcmVuZGVyIFJlYWN0IGFwcDonLCBlcnJvcik7CiAgICByb290RWxlbWVudC5pbm5lckhUTUwgPSBgCiAgICAgIDxkaXYgc3R5bGU9ImRpc3BsYXk6IGZsZXg7IGFsaWduLWl0ZW1zOiBjZW50ZXI7IGp1c3RpZnktY29udGVudDogY2VudGVyOyBtaW4taGVpZ2h0OiAxMDB2aDsgZm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0sIEJsaW5rTWFjU3lzdGVtRm9udCwgc2Fucy1zZXJpZjsgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KDEzNWRlZywgIzY2N2VlYSAwJSwgIzc2NGJhMiAxMDAlKTsgY29sb3I6IHdoaXRlOyI+CiAgICAgICAgPGRpdiBzdHlsZT0idGV4dC1hbGlnbjogY2VudGVyOyBtYXgtd2lkdGg6IDUwMHB4OyBwYWRkaW5nOiAycmVtOyI+CiAgICAgICAgICA8aDEgc3R5bGU9ImNvbG9yOiAjZmZmOyBtYXJnaW4tYm90dG9tOiAxcmVtOyI+VW5hYmxlIHRvIExvYWQgTXhTbWlsZXM8L2gxPgogICAgICAgICAgPHAgc3R5bGU9ImNvbG9yOiByZ2JhKDI1NSwyNTUsMjU1LDAuOCk7IG1hcmdpbi1ib3R0b206IDFyZW07Ij5QbGVhc2UgdHJ5IHJlZnJlc2hpbmcgdGhlIHBhZ2UuPC9wPgogICAgICAgICAgPGJ1dHRvbiBvbmNsaWNrPSJ3aW5kb3cubG9jYXRpb24ucmVsb2FkKCkiIHN0eWxlPSJiYWNrZ3JvdW5kOiAjNjRBOEYwOyBjb2xvcjogd2hpdGU7IGJvcmRlcjogbm9uZTsgcGFkZGluZzogMC43NXJlbSAxLjVyZW07IGJvcmRlci1yYWRpdXM6IDAuNXJlbTsgY3Vyc29yOiBwb2ludGVyOyBmb250LXdlaWdodDogNjAwOyI+UmVmcmVzaCBQYWdlPC9idXR0b24+CiAgICAgICAgICA8ZGl2IHN0eWxlPSJtYXJnaW4tdG9wOiAxcmVtOyBmb250LXNpemU6IDAuODc1cmVtOyBjb2xvcjogcmdiYSgyNTUsMjU1LDI1NSwwLjYpOyI+RXJyb3I6ICR7ZXJyb3J9PC9kaXY+CiAgICAgICAgPC9kaXY+CiAgICAgIDwvZGl2PgogICAgYDsKICB9Cn0gZWxzZSB7CiAgY29uc29sZS5lcnJvcignUm9vdCBlbGVtZW50IG5vdCBmb3VuZCcpOwp9Cg==" as="script" />
-    
-    <!-- Preload critical font -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
-    
-    <!-- Defer third-party scripts -->
-    <script src="https://replit.com/public/js/replit-dev-banner.js" defer></script>
-    <script type="module" crossorigin src="/assets/index-PO7UiVne.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/vendor-C8R_D1-_.js">
-    <link rel="modulepreload" crossorigin href="/assets/react-dom-ANlTW9P9.js">
-    <link rel="modulepreload" crossorigin href="/assets/radix-ui-D3hghNPx.js">
-    <link rel="modulepreload" crossorigin href="/assets/react-core-DUvmEEFD.js">
-    <link rel="modulepreload" crossorigin href="/assets/router-DWdTB6w7.js">
-    <link rel="stylesheet" crossorigin href="/assets/index-DzOu2czo.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
-</html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MxSmiles - Save 40-70% on Dental Care in Mexico</title>
+    <style>*{box-sizing:border-box;margin:0;padding:0}body{color:#333;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;line-height:1.6}.hero{align-items:center;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;display:flex;flex-direction:column;justify-content:center;min-height:80vh;padding:100px 20px;text-align:center}.hero h1{font-size:3.5rem;font-weight:700;margin-bottom:1.5rem}.hero p{font-size:1.3rem;margin-bottom:2.5rem;max-width:700px;opacity:.95}.btn{background:#64a8f0;border:none;border-radius:8px;color:#fff;cursor:pointer;display:inline-block;font-size:1.1rem;font-weight:600;margin:0 10px 10px 0;padding:18px 36px;text-decoration:none;transition:all .3s ease}.btn:hover{background:#5496dd;transform:translateY(-1px)}.btn-outline{background:transparent;border:2px solid #fff;color:#fff}.btn-outline:hover{background:#fff;color:#64a8f0}.features{background:#fff;margin:0 auto;max-width:1200px;padding:100px 20px}.features h2{color:#333;font-size:3rem;margin-bottom:4rem;text-align:center}.feature-grid{display:grid;gap:3rem;grid-template-columns:repeat(auto-fit,minmax(350px,1fr))}.feature{background:#fff;border:2px solid transparent;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:3rem 2rem;text-align:center;transition:all .3s ease}.feature:hover{border-color:#64a8f0;transform:translateY(-5px)}.feature-icon{font-size:3rem;margin-bottom:1.5rem}.feature h3{color:#64a8f0;font-size:1.5rem;margin-bottom:1.5rem}.feature p{color:#666;font-size:1.1rem;line-height:1.7}.contact{background:linear-gradient(135deg,#64a8f0,#5496dd);color:#fff;padding:100px 20px;text-align:center}.contact h2{font-size:3rem;margin-bottom:1.5rem}.contact p{font-size:1.3rem;margin-bottom:3rem;opacity:.95}.contact-info{-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);background:hsla(0,0%,100%,.15);border-radius:15px;margin:2rem auto;max-width:400px;padding:2rem}.contact-item{align-items:center;display:flex;font-size:1.1rem;justify-content:center;margin:1rem 0}.contact-item span{margin-left:10px}.footer{background:#333;color:#fff;padding:3rem 2rem;text-align:center}.footer p{font-size:1rem}@media (max-width:768px){.hero h1{font-size:2.5rem}.hero p{font-size:1.1rem}.contact h2,.features h2{font-size:2.5rem}.feature-grid{grid-template-columns:1fr}.btn{display:block;margin:10px auto;max-width:280px}}</style>
+</head>
+<body>
+    <section class="hero">
+        <h1>🦷 Save 40-70% on Dental Care</h1>
+        <p>Get world-class dental treatment in Mexico at a fraction of US costs. Trusted by thousands of patients who've transformed their smiles while saving thousands of dollars.</p>
+        <div>
+            <a href="tel:+15551234567" class="btn">📞 Get Free Consultation</a>
+            <a href="#features" class="btn btn-outline">💰 See Savings</a>
+        </div>
+    </section>
 
+    <section class="features" id="features">
+        <h2>Why Choose MxSmiles?</h2>
+        <div class="feature-grid">
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <h3>Massive Savings</h3>
+                <p>Save 40-70% compared to US dental costs while receiving the same quality of care from certified professionals. Procedures that cost $10,000+ in the US often cost $3,000-4,000 in Mexico.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏥</div>
+                <h3>World-Class Quality</h3>
+                <p>Work with certified dentists in modern facilities using the latest technology. Many of our partner clinics exceed US standards and serve international patients daily.</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🛡️</div>
+                <h3>Safe & Trusted</h3>
+                <p>All our partner clinics are verified, certified, and have excellent patient safety records. We've helped thousands of patients achieve their dream smiles safely.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact">
+        <h2>Ready to Save on Dental Care?</h2>
+        <p>Get a free consultation and personalized treatment plan today</p>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <span>📞</span>
+                <span>Call: (555) 123-4567</span>
+            </div>
+            <div class="contact-item">
+                <span>✉️</span>
+                <span>Email: info@mxsmiles.com</span>
+            </div>
+            <div class="contact-item">
+                <span>🌐</span>
+                <span>Serving patients from across the US</span>
+            </div>
+        </div>
+        
+        <a href="mailto:info@mxsmiles.com" class="btn" style="background: white; color: #64A8F0; margin-top: 2rem;">
+            Schedule Free Consultation
+        </a>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 MxSmiles. Professional dental care you can trust and afford.</p>
+        <p style="margin-top: 0.5rem; opacity: 0.8;">Helping US patients save on dental care in Mexico since 2023</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Add some interactivity
+        console.log('🦷 MxSmiles - Dental Tourism Platform Loaded Successfully!');
+        console.log('📞 Ready to help patients save 40-70% on dental care in Mexico');
+    </script>
+</body>
+</html>
