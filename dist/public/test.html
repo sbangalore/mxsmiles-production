@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page - MxSmiles</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        p { font-size: 1.2rem; margin-bottom: 2rem; }
+        .status { 
+            background: rgba(255,255,255,0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🦷 MxSmiles Test Page</h1>
+        <p>This is a simple test to verify the server is working correctly.</p>
+        
+        <div class="status">
+            <strong>✅ HTML Loading: Working</strong><br>
+            <strong>✅ CSS Styling: Working</strong><br>
+            <strong id="js-status">⏳ JavaScript: Testing...</strong>
+        </div>
+        
+        <div id="api-test">
+            <strong>⏳ API Connection: Testing...</strong>
+        </div>
+        
+        <p><a href="/" style="color: white; text-decoration: underline;">← Back to Main App</a></p>
+    </div>
+
+    <script>
+        // Test JavaScript
+        document.getElementById('js-status').innerHTML = '<strong>✅ JavaScript: Working</strong>';
+        
+        // Test API connection
+        fetch('/api/health')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('api-test').innerHTML = 
+                    '<strong>✅ API Connection: Working</strong><br>' +
+                    '<small>Status: ' + data.status + ', Service: ' + data.service + '</small>';
+            })
+            .catch(error => {
+                document.getElementById('api-test').innerHTML = 
+                    '<strong>❌ API Connection: Failed</strong><br>' +
+                    '<small>Error: ' + error.message + '</small>';
+            });
+    </script>
+</body>
+</html>
