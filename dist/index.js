@@ -201,7 +201,7 @@ import express2 from "express";
 import fs2 from "fs";
 import path4 from "path";
 function serveStatic2(app2) {
-  const distPath = path4.resolve(import.meta.dirname, "public");
+  const distPath = path4.resolve(process.cwd(), "dist", "public");
   if (!fs2.existsSync(distPath)) {
     throw new Error(
       `Could not find the build directory: ${distPath}, make sure to build the client first`

@@ -93,7 +93,7 @@ jobs:
         User=mxsmiles
         WorkingDirectory=/opt/mxsmiles-production
         Environment=PATH=/usr/bin:/usr/local/bin
-        Environment=NODE_ENV=production
+        EnvironmentFile=/opt/mxsmiles-production/.env
         ExecStart=/usr/bin/node dist/index.js
         Restart=always
         RestartSec=10
