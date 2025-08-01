@@ -43,7 +43,7 @@ jobs:
 
     - name: Upload to S3
       run: |
-        aws s3 cp mxsmiles-production-${{ github.sha }}.tar.gz s3://mxsmiles-patient-photos-rbvllfvt/deployments/
+        aws s3 cp mxsmiles-production-${{ github.sha }}.tar.gz s3://mxsmiles-patient-photos-rbvlffvt/deployments/
 
     - name: Deploy to EC2
       run: |
@@ -60,7 +60,7 @@ jobs:
         cd /opt/mxsmiles-production
         
         # Download and extract deployment
-        aws s3 cp s3://mxsmiles-patient-photos-rbvllfvt/deployments/mxsmiles-production-${{ github.sha }}.tar.gz .
+        aws s3 cp s3://mxsmiles-patient-photos-rbvlffvt/deployments/mxsmiles-production-${{ github.sha }}.tar.gz .
         sudo tar -xzf mxsmiles-production-${{ github.sha }}.tar.gz
         sudo rm mxsmiles-production-${{ github.sha }}.tar.gz
         
@@ -72,7 +72,7 @@ jobs:
         NODE_ENV=production
         PORT=3000
         DATABASE_URL=postgresql://mxsmiles_admin:${{ secrets.DB_PASSWORD }}@mxsmiles-db.caxsqskqmz42.us-east-1.rds.amazonaws.com:5432/mxsmiles
-        S3_BUCKET=mxsmiles-patient-photos-rbvllfvt
+        S3_BUCKET=mxsmiles-patient-photos-rbvlffvt
         AWS_REGION=us-east-1
         SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}
         SESSION_SECRET=mxsmiles-aws-production-secret-2025
@@ -116,19 +116,19 @@ jobs:
         curl -f http://localhost:3000/api/health || exit 1
         
         # Clean up S3
-        aws s3 rm s3://mxsmiles-patient-photos-rbvllfvt/deployments/mxsmiles-production-${{ github.sha }}.tar.gz
+        aws s3 rm s3://mxsmiles-patient-photos-rbvlffvt/deployments/mxsmiles-production-${{ github.sha }}.tar.gz
         
         echo "✅ Deployment successful!"
         EOF
 
         # Upload and execute deployment script
-        aws s3 cp deploy.sh s3://mxsmiles-patient-photos-rbvllfvt/deployments/
+        aws s3 cp deploy.sh s3://mxsmiles-patient-photos-rbvlffvt/deployments/
         
         aws ssm send-command \
           --instance-ids i-0e201d9e18fd2bec8 \
           --document-name "AWS-RunShellScript" \
           --parameters "commands=[
-            'aws s3 cp s3://mxsmiles-patient-photos-rbvllfvt/deployments/deploy.sh /tmp/deploy.sh',
+            'aws s3 cp s3://mxsmiles-patient-photos-rbvlffvt/deployments/deploy.sh /tmp/deploy.sh',
             'chmod +x /tmp/deploy.sh',
             'sudo /tmp/deploy.sh'
           ]" \
