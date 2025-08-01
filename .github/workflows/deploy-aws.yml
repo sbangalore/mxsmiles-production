@@ -1,0 +1,145 @@
+name: Deploy MxSmiles Production to AWS
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js 18
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Create deployment package
+      run: |
+        tar -czf mxsmiles-production-${{ github.sha }}.tar.gz \
+          --exclude=node_modules \
+          --exclude=.git \
+          --exclude=.github \
+          --exclude=.env \
+          dist/ server/ shared/ package.json package-lock.json public/
+
+    - name: Upload to S3
+      run: |
+        aws s3 cp mxsmiles-production-${{ github.sha }}.tar.gz s3://mxsmiles-deployments-${{ github.run_number }}/
+
+    - name: Deploy to EC2
+      run: |
+        # Create deployment script
+        cat > deploy.sh << 'EOF'
+        #!/bin/bash
+        set -e
+        
+        # Stop existing service
+        sudo systemctl stop mxsmiles-production || true
+        
+        # Create deployment directory
+        sudo mkdir -p /opt/mxsmiles-production
+        cd /opt/mxsmiles-production
+        
+        # Download and extract deployment
+        aws s3 cp s3://mxsmiles-deployments-${{ github.run_number }}/mxsmiles-production-${{ github.sha }}.tar.gz .
+        sudo tar -xzf mxsmiles-production-${{ github.sha }}.tar.gz
+        sudo rm mxsmiles-production-${{ github.sha }}.tar.gz
+        
+        # Install production dependencies
+        sudo npm ci --only=production
+        
+        # Set up environment variables
+        sudo tee /opt/mxsmiles-production/.env > /dev/null << 'ENVEOF'
+        NODE_ENV=production
+        PORT=3000
+        DATABASE_URL=postgresql://mxsmiles_admin:${{ secrets.DB_PASSWORD }}@mxsmiles-db.caxsqskqmz42.us-east-1.rds.amazonaws.com:5432/mxsmiles
+        S3_BUCKET=mxsmiles-patient-photos-rbvllfvt
+        AWS_REGION=us-east-1
+        SENDGRID_API_KEY=${{ secrets.SENDGRID_API_KEY }}
+        SESSION_SECRET=mxsmiles-aws-production-secret-2025
+        SKIP_ENV_VALIDATION=true
+        ENVEOF
+        
+        # Set permissions
+        sudo chown -R mxsmiles:mxsmiles /opt/mxsmiles-production
+        
+        # Create systemd service
+        sudo tee /etc/systemd/system/mxsmiles-production.service > /dev/null << 'SERVICEEOF'
+        [Unit]
+        Description=MxSmiles Production Application
+        After=network.target
+        
+        [Service]
+        Type=simple
+        User=mxsmiles
+        WorkingDirectory=/opt/mxsmiles-production
+        Environment=PATH=/usr/bin:/usr/local/bin
+        Environment=NODE_ENV=production
+        ExecStart=/usr/bin/node dist/index.js
+        Restart=always
+        RestartSec=10
+        StandardOutput=journal
+        StandardError=journal
+        
+        [Install]
+        WantedBy=multi-user.target
+        SERVICEEOF
+        
+        # Start the service
+        sudo systemctl daemon-reload
+        sudo systemctl enable mxsmiles-production
+        sudo systemctl start mxsmiles-production
+        
+        # Wait for service to start
+        sleep 10
+        
+        # Test the application
+        curl -f http://localhost:3000/api/health || exit 1
+        
+        # Clean up S3
+        aws s3 rm s3://mxsmiles-deployments-${{ github.run_number }}/mxsmiles-production-${{ github.sha }}.tar.gz
+        aws s3 rb s3://mxsmiles-deployments-${{ github.run_number }} || true
+        
+        echo "✅ Deployment successful!"
+        EOF
+
+        # Upload and execute deployment script
+        aws s3 cp deploy.sh s3://mxsmiles-deployments-${{ github.run_number }}/
+        
+        aws ssm send-command \
+          --instance-ids i-0e201d9e18fd2bec8 \
+          --document-name "AWS-RunShellScript" \
+          --parameters "commands=[
+            'aws s3 cp s3://mxsmiles-deployments-${{ github.run_number }}/deploy.sh /tmp/deploy.sh',
+            'chmod +x /tmp/deploy.sh',
+            'sudo /tmp/deploy.sh'
+          ]" \
+          --region us-east-1
+
+    - name: Verify deployment
+      run: |
+        echo "🚀 Deployment completed!"
+        echo "URL: http://mxsmiles-alb-2098546974.us-east-1.elb.amazonaws.com"
+        
+        # Wait for deployment to complete and test
+        sleep 60
+        curl -f http://mxsmiles-alb-2098546974.us-east-1.elb.amazonaws.com/api/health
