@@ -546,14 +546,18 @@ async function generatePresignedUrl(fileName, fileType, folder = "uploads") {
 }
 
 // server/notifications.ts
-import { MailService } from "@sendgrid/mail";
-var mailService = new MailService();
-if (process.env.SENDGRID_API_KEY) {
-  mailService.setApiKey(process.env.SENDGRID_API_KEY);
-}
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
+var sesClient = new SESClient({
+  region: process.env.AWS_REGION || "us-east-1",
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ""
+  }
+});
 async function sendBookingNotification(bookingData) {
   try {
     const adminEmail = "bsudarshan@outlook.com";
+    const sourceEmail = "bsudarshan@outlook.com";
     const subject = `New ${bookingData.serviceType === "consultation" ? "Patient Consultation" : "Provider Partnership"} Booking - MxSmiles`;
     const emailBody = `
 New booking request received:
@@ -574,26 +578,40 @@ SUBMITTED: ${(/* @__PURE__ */ new Date()).toLocaleString()}
 ---
 MxSmiles Booking System
     `.trim();
-    if (process.env.SENDGRID_API_KEY) {
-      const emailData = {
-        to: adminEmail,
-        from: "bsudarshan@outlook.com",
-        // Use your verified sender
-        subject,
-        text: emailBody,
-        html: emailBody.replace(/\n/g, "<br>")
-      };
-      await mailService.send(emailData);
-      console.log("\u2705 Email sent successfully to:", adminEmail);
-      return true;
-    } else {
-      console.log("\u{1F4E7} SendGrid API key not found, logging email:");
+    const htmlBody = emailBody.replace(/\n/g, "<br>");
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      console.log("\u{1F4E7} AWS credentials not found, logging email:");
       console.log("Email Subject:", subject);
       console.log("Email Body:", emailBody);
       return false;
     }
+    const command = new SendEmailCommand({
+      Source: sourceEmail,
+      Destination: {
+        ToAddresses: [adminEmail]
+      },
+      Message: {
+        Subject: {
+          Data: subject,
+          Charset: "UTF-8"
+        },
+        Body: {
+          Text: {
+            Data: emailBody,
+            Charset: "UTF-8"
+          },
+          Html: {
+            Data: htmlBody,
+            Charset: "UTF-8"
+          }
+        }
+      }
+    });
+    await sesClient.send(command);
+    console.log("\u2705 Email sent successfully via AWS SES to:", adminEmail);
+    return true;
   } catch (error) {
-    console.error("Failed to send booking notification:", error);
+    console.error("Failed to send booking notification via SES:", error);
     console.log("\u{1F4E7} Fallback - Email content that failed to send:");
     console.log("Subject:", `New ${bookingData.serviceType === "consultation" ? "Patient Consultation" : "Provider Partnership"} Booking - MxSmiles`);
     console.log("Details:", bookingData);
