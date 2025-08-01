@@ -216,7 +216,12 @@ function serveStatic2(app2) {
   }
   app2.use(express2.static(distPath));
   app2.get("/", (_req, res) => {
-    res.sendFile(path4.resolve(distPath, "index.html"));
+    const standalonePath = path4.resolve(distPath, "standalone.html");
+    if (fs2.existsSync(standalonePath)) {
+      res.sendFile(standalonePath);
+    } else {
+      res.sendFile(path4.resolve(distPath, "index.html"));
+    }
   });
   app2.use("*", (_req, res) => {
     res.sendFile(path4.resolve(distPath, "index.html"));
