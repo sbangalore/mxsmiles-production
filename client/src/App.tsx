@@ -8,7 +8,7 @@ import { DesignProvider } from "@/contexts/design-context";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import LoadingSpinner from "@/components/ui/loading-spinner";
 import { 
   BookingPage, 
@@ -31,6 +31,40 @@ import { usePerformanceOptimizations } from "@/hooks/use-performance";
 import { initGA } from "@/lib/analytics";
 import { initPerformanceOptimizations } from "@/utils/performance-optimization";
 
+// Simple error boundary component
+function ErrorBoundary({ children }: { children: React.ReactNode }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.error);
+      setHasError(true);
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
+  if (hasError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Something went wrong</h1>
+          <p className="text-gray-600 mb-4">We're working to fix this issue.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <>{children}</>;
+}
+
 function Router() {
   // Track page views when routes change
   useAnalytics();
@@ -43,7 +77,11 @@ function Router() {
   
   // Initialize PageSpeed optimizations targeting 398KB JS and 79KB CSS savings
   useEffect(() => {
-    initPerformanceOptimizations();
+    try {
+      initPerformanceOptimizations();
+    } catch (error) {
+      console.warn('Performance optimizations failed:', error);
+    }
   }, []);
   
   return (
@@ -89,23 +127,29 @@ function Router() {
 function App() {
   // Initialize Google Analytics when app loads
   useEffect(() => {
-    // Verify required environment variable is present
-    if (!import.meta.env.VITE_GA_MEASUREMENT_ID) {
-      console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
-    } else {
-      initGA();
+    try {
+      // Verify required environment variable is present
+      if (!import.meta.env.VITE_GA_MEASUREMENT_ID) {
+        console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
+      } else {
+        initGA();
+      }
+    } catch (error) {
+      console.warn('GA initialization failed:', error);
     }
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </LanguageProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </LanguageProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
