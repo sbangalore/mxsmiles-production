@@ -64,8 +64,8 @@ jobs:
         sudo tar -xzf mxsmiles-production-${{ github.sha }}.tar.gz
         sudo rm mxsmiles-production-${{ github.sha }}.tar.gz
         
-        # Install production dependencies
-        sudo npm ci --only=production
+        # Install all dependencies (vite needed for runtime)
+        sudo npm install
         
         # Set up environment variables
         sudo tee /opt/mxsmiles-production/.env > /dev/null << 'ENVEOF'

@@ -25,7 +25,7 @@ tar -czf /tmp/mxsmiles-production.tar.gz \
   dist/ server/ shared/ package.json package-lock.json public/
 
 # Upload to S3 bucket
-S3_BUCKET="mxsmiles-patient-photos-rbvllfvt"
+S3_BUCKET="mxsmiles-patient-photos-rbvlffvt"
 echo "☁️ Uploading to S3..."
 aws s3 cp /tmp/mxsmiles-production.tar.gz s3://${S3_BUCKET}/deployments/
 
@@ -45,7 +45,7 @@ sudo mkdir -p /opt/mxsmiles-production
 cd /opt/mxsmiles-production
 
 # Download and extract
-aws s3 cp s3://mxsmiles-patient-photos-rbvllfvt/deployments/mxsmiles-production.tar.gz .
+aws s3 cp s3://mxsmiles-patient-photos-rbvlffvt/deployments/mxsmiles-production.tar.gz .
 sudo tar -xzf mxsmiles-production.tar.gz
 sudo rm mxsmiles-production.tar.gz
 
@@ -57,7 +57,7 @@ sudo tee /opt/mxsmiles-production/.env > /dev/null << 'ENVEOF'
 NODE_ENV=production
 PORT=3000
 DATABASE_URL=postgresql://mxsmiles_admin:Seanbangalore123!@mxsmiles-db.caxsqskqmz42.us-east-1.rds.amazonaws.com:5432/mxsmiles
-S3_BUCKET=mxsmiles-patient-photos-rbvllfvt
+S3_BUCKET=mxsmiles-patient-photos-rbvlffvt
 AWS_REGION=us-east-1
 SESSION_SECRET=mxsmiles-aws-production-secret-2025
 SKIP_ENV_VALIDATION=true
