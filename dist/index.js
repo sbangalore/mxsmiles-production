@@ -229,6 +229,7 @@ var init_static = __esm({
 });
 
 // server/index.ts
+import "dotenv/config";
 import express3 from "express";
 
 // server/routes.ts
@@ -895,8 +896,7 @@ app.use((req, res, next) => {
   const port = parseInt(process.env.PORT || "3000", 10);
   server.listen({
     port,
-    host: "0.0.0.0",
-    reusePort: true
+    host: "0.0.0.0"
   }, () => {
     console.log(`serving on port ${port}`);
   });
